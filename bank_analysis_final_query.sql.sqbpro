@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="UTF-8"?><sqlb_project><db path="bank.db" readonly="0" foreign_keys="1" case_sensitive_like="0" temp_store="0" wal_autocheckpoint="1000" synchronous="2"/><attached/><window><main_tabs open="structure browser pragmas query" current="3"/></window><tab_structure><column_width id="0" width="300"/><column_width id="1" width="0"/><column_width id="2" width="100"/><column_width id="3" width="1201"/><column_width id="4" width="0"/><expanded_item id="1" parent="1"/><expanded_item id="2" parent="1"/><expanded_item id="3" parent="1"/></tab_structure><tab_browse><table title="transactions" custom_title="0" dock_id="4" table="4,12:maintransactions"/><dock_state state="000000ff00000000fd0000000100000002000005bc0000038cfc0100000002fb000000160064006f0063006b00420072006f00770073006500310100000000000001fa0000000000000000fb000000160064006f0063006b00420072006f00770073006500340100000000000005bc0000015c00ffffff000005bc0000000000000004000000040000000800000008fc00000000"/><default_encoding codec=""/><browse_table_settings><table schema="main" name="transactions" show_row_id="0" encoding="" plot_x_axis="" unlock_view_pk="_rowid_" freeze_columns="0"><sort><column index="4" mode="0"/></sort><column_widths><column index="1" value="88"/><column index="2" value="69"/><column index="3" value="103"/><column index="4" value="102"/><column index="5" value="51"/></column_widths><filter_values/><conditional_formats/><row_id_formats/><display_formats/><hidden_columns/><plot_y_axes/><global_filter/></table></browse_table_settings></tab_browse><tab_sql><sql name="BANK_ANALYSIS_FINAL_QUERY">-- ==========================================
+-- BANK TRANSACTION ANALYSIS
+-- ==========================================
+
+-- 1. OVERALL TRANSACTION PERFORMANCE
+-- ==========================================
+
+-- Total Transactions
+
+SELECT COUNT(transaction_id) AS total_transactions
+FROM transactions;
+
+
+-- Total Transaction Amount
+
+SELECT SUM(amount) AS total_transaction_amount
+FROM transactions;
+
+
+-- Average Transaction amount
+SELECT avg(amount) AS average_transaction_amount
+FROM transactions;
+	
+-- ==========================================
+-- 2. DEPOSIT VS WITHDRAWAL ANALYSIS
+-- ==========================================
+
+-- Counts of Transaction types
+
+SELECT COUNT(transaction_type) AS transaction_count
+FROM transactions
+GROUP BY transaction_type;
+
+-- Total Dollar Amount of Deposits vs. Withdrawals
+
+SELECT transaction_type, sum(amount) AS total_amount
+FROM transactions
+GROUP BY transaction_type;
+
+
+-- Average transaction amount for Deposits vs WIthdrawls
+
+SELECT transaction_type, AVG(amount) AS average_amount
+FROM transactions
+GROUP BY transaction_type;
+
+
+-- Min and Max accounts for DEPOSITS vs Withdrawals
+
+SELECT transaction_type, 
+		MAX(amount) AS max_amount, 
+		MIN(amount) AS min_amount
+FROM transactions
+GROUP BY transaction_type;
+
+
+-- ==========================================
+-- 3. MONTHLY ANALYSIS
+-- ==========================================
+
+-- Which month had the highest total transaction value?
+ 
+SELECT substr(transaction_date,1,7) AS transaction_month, 
+	   SUM(amount) AS total_amount
+FROM transactions
+GROUP BY substr(transaction_date,1,7);
+
+
+--How many transactions occurred each month?
+
+SELECT substr( transaction_date, 1, 7) AS transaction_month,
+	   COUNT(transaction_id) AS transaction_count
+FROM transactions
+GROUP BY transaction_month;
+
+--Which month had the highest deposit amount?
+
+SELECT  substr( transaction_date, 1, 7) AS transaction_month, SUM(amount) AS total_deposits
+FROM transactions
+WHERE transaction_type = &quot;Deposit&quot;
+GROUP BY transaction_month;
+
+--Which month had the highest withdrawal amount?
+
+SELECT  substr( transaction_date, 1, 7) AS transaction_month, SUM(amount) AS total_withdrawals
+FROM transactions
+WHERE transaction_type = &quot;Withdrawal&quot;
+GROUP BY transaction_month;
+
+
+
+-- ==========================================
+-- 4. ACCOUNT ANALYSIS
+-- ==========================================
+
+--Which account generated the highest total transaction value?
+
+SELECT account_id, 
+	  SUM(amount) AS total_transaction_amount
+FROM transactions
+GROUP BY account_id
+ORDER BY SUM(amount)
+DESC;
+
+-- How much did that account deposit vs. withdraw?
+
+SELECT account_id, SUM(amount) 
+FROM transactions 
+WHERE account_id = 1025
+GROUP BY transaction_type;
+
+
+--How many transactions does each account have?
+
+SELECT account_id,
+	   COUNT(DISTINCT transaction_id) AS number_of_transactions
+FROM transactions
+GROUP BY account_id
+
+
+-- ==========================================
+-- KEY BUSINESS INSIGHTS
+-- ==========================================
+
+-- 1. Strong Positive Cash Flow
+-- The account generated $59,200 more in deposits than withdrawals,
+-- indicating a strong net positive cash flow during the analysis period.
+
+
+-- 2. Deposit vs. Withdrawal Behavior
+-- Deposits averaged $3,096 compared with $728 for withdrawals.
+-- Although both transaction types occurred 25 times, deposits
+-- averaged 4.25 times the value of withdrawals.
+
+
+-- 3. March Was the Standout Month
+-- March generated $29,750 in total transaction value,
+-- representing 31.12% of all transaction value.
+-- March also recorded the highest deposit activity ($24,200)
+-- and highest withdrawal activity ($5,550).
+
+
+-- 4. Highest-Value Account
+-- Account 1025 generated the highest transaction value at $8,800.
+-- Deposits accounted for $7,000 while withdrawals accounted for $1,800.
+
+
+-- 5. Account Activity Was Evenly Distributed
+-- The dataset contained 25 unique accounts and 50 transactions.
+-- Each account recorded exactly two transactions, meaning differences
+-- in transaction value were driven by transaction size rather than
+-- transaction frequency.
+
+
+-- 6. Limited Account Concentration
+-- Account 1025 represented 9.2% of total transaction value.
+-- This indicates that transaction activity was relatively diversified
+-- across the accounts analyzed.
+
+</sql><current_tab id="0"/></tab_sql></sqlb_project>
