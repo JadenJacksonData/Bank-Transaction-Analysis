@@ -129,15 +129,14 @@ GROUP BY account_id
 
 -- 2. Deposit vs. Withdrawal Behavior
 -- Deposits averaged $3,096 compared with $728 for withdrawals.
--- Although both transaction types occurred 25 times, deposits
--- averaged 4.25 times the value of withdrawals.
+-- Although both transaction types occurred 25 times, deposits averaged 4.25 times the value of withdrawals.
 
 
 -- 3. March Was the Standout Month
 -- March generated $29,750 in total transaction value,
 -- representing 31.12% of all transaction value.
 -- March also recorded the highest deposit activity ($24,200)
--- and highest withdrawal activity ($5,550).
+-- highest withdrawal activity ($5,550).
 
 
 -- 4. Highest-Value Account
@@ -148,8 +147,7 @@ GROUP BY account_id
 -- 5. Account Activity Was Evenly Distributed
 -- The dataset contained 25 unique accounts and 50 transactions.
 -- Each account recorded exactly two transactions, meaning differences
--- in transaction value were driven by transaction size rather than
--- transaction frequency.
+-- in transaction value were driven by transaction size rather than transaction frequency.
 
 
 -- 6. Limited Account Concentration
